@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#authentication-jwt" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -357,6 +362,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -488,6 +495,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -504,9 +513,301 @@
 
 
 
-  <h1>Authentication</h1>
+<h1 id="authentication-jwt">Authentication &amp; JWT</h1>
+<p>Authentication and authorization are core concepts in backend engineering and production AI systems.</p>
+<hr />
+<h1 id="authentication-vs-authorization">Authentication vs Authorization</h1>
+<h2 id="authentication">Authentication</h2>
+<p>Authentication answers:</p>
+<blockquote>
+<p>Who are you?</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>Login</li>
+<li>Email/password verification</li>
+<li>Identity verification</li>
+</ul>
+<hr />
+<h2 id="authorization">Authorization</h2>
+<p>Authorization answers:</p>
+<blockquote>
+<p>What are you allowed to do?</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>Can access premium AI model?</li>
+<li>Has enough quota?</li>
+<li>Is admin?</li>
+<li>Enterprise user?</li>
+</ul>
+<hr />
+<h1 id="authentication-flow">Authentication Flow</h1>
+<h2 id="detailed-view">Detailed View</h2>
+<div class="highlight"><pre><span></span><code>flowchart TD
 
+A[Step 1 - Login]
+--&gt; B[Step 2 - Server Verifies]
 
+B --&gt; C[Check Email and Password]
+
+C --&gt; D[Authenticated User]
+
+D --&gt; E[Step 3 - Server Creates Token]
+
+E --&gt; F[Step 4 - Client Stores Token]
+
+F --&gt; G[Step 5 - Every Request Includes Token]
+
+G --&gt; H[Backend Verifies Token]
+
+H --&gt; I[Allow or Deny Request]
+</code></pre></div>
+<hr />
+<h2 id="helicopter-view">Helicopter View</h2>
+<div class="highlight"><pre><span></span><code>flowchart LR
+
+A[Browser / Frontend]
+--&gt; B[Send Email + Password Once]
+
+B --&gt; C[Backend]
+
+C --&gt; D[JWT Token]
+
+D --&gt; A
+</code></pre></div>
+<hr />
+<h1 id="why-do-we-need-tokens">Why Do We Need Tokens?</h1>
+<p>HTTP is stateless.</p>
+<p>Each request is independent.</p>
+<p>The server does not automatically remember previous requests.</p>
+<p>Tokens help applications identify users across multiple requests.</p>
+<hr />
+<h1 id="types-of-tokens">Types of Tokens</h1>
+<h2 id="1-random-tokens">1. Random Tokens</h2>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>x7A91P0Q
+</code></pre></div>
+<p>The server stores token-related information inside a database or session store.</p>
+<hr />
+<h2 id="2-jwt-json-web-token">2. JWT (JSON Web Token)</h2>
+<p>JWT stores information directly inside the token payload.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>xxxxx.yyyyy.zzzzz
+</code></pre></div>
+<p>Payload example:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ahmed&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h1 id="jwt-structure">JWT Structure</h1>
+<p>JWT contains 3 parts:</p>
+<div class="highlight"><pre><span></span><code>HEADER.PAYLOAD.SIGNATURE
+</code></pre></div>
+<hr />
+<h2 id="header">Header</h2>
+<p>Contains token metadata.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HS256&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;typ&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JWT&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="payload">Payload</h2>
+<p>Contains user-related information.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1712345678</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="signature">Signature</h2>
+<p>The server signs the token using a secret key.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre><span></span><code>SIGN(header + payload, secret_key)
+</code></pre></div>
+<p>This prevents unauthorized modifications.</p>
+<hr />
+<h1 id="why-jwt-is-powerful">Why JWT Is Powerful</h1>
+<p>The server does not need to store authentication session state.</p>
+<p>The token itself contains the information.</p>
+<p>This enables scalable authentication systems.</p>
+<hr />
+<h1 id="jwt-security">JWT Security</h1>
+<p>JWT is usually signed, not encrypted.</p>
+<p>Anyone can read the payload,
+but they should not be able to modify it.</p>
+<p>Never store:</p>
+<ul>
+<li>passwords</li>
+<li>API secrets</li>
+<li>highly sensitive data</li>
+</ul>
+<p>inside JWT payloads.</p>
+<hr />
+<h1 id="sessions-vs-jwt">Sessions vs JWT</h1>
+<div class="highlight"><pre><span></span><code>flowchart LR
+
+A[Client]
+--&gt; B[Server]
+
+B --&gt; C[(Session Store)]
+
+C --&gt; B
+</code></pre></div>
+<p>In session-based authentication:</p>
+<ul>
+<li>the server stores session state</li>
+<li>the backend remembers users</li>
+<li>scaling becomes harder</li>
+</ul>
+<hr />
+<h2 id="jwt-stateless-authentication">JWT Stateless Authentication</h2>
+<div class="highlight"><pre><span></span><code>flowchart LR
+
+A[Client + JWT]
+--&gt; B[Server A]
+
+A --&gt; C[Server B]
+
+A --&gt; D[Server C]
+</code></pre></div>
+<p>In JWT authentication:</p>
+<ul>
+<li>any server can validate the token</li>
+<li>authentication becomes easier to scale</li>
+<li>no centralized session store is required</li>
+</ul>
+<hr />
+<h1 id="what-is-state">What Is State?</h1>
+<p>State = information that must persist between requests.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>Ahmed is logged in
+</code></pre></div>
+<p>A traditional session-based system stores this information on the server.</p>
+<p>This is called a stateful system.</p>
+<hr />
+<h1 id="the-scaling-problem">The Scaling Problem</h1>
+<p>In cloud and distributed systems:</p>
+<ul>
+<li>multiple servers exist</li>
+<li>requests may hit different servers</li>
+<li>sessions become harder to synchronize</li>
+</ul>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>Load Balancer
+    ↓
+Server A
+Server B
+Server C
+</code></pre></div>
+<hr />
+<h1 id="jwt-and-stateless-authentication">JWT and Stateless Authentication</h1>
+<p>JWT enables stateless authentication.</p>
+<p>Any server can validate the token independently.</p>
+<p>This makes scaling easier in:</p>
+<ul>
+<li>cloud systems</li>
+<li>microservices</li>
+<li>AI APIs</li>
+<li>serverless environments</li>
+</ul>
+<hr />
+<h1 id="important-note">Important Note</h1>
+<p>Stateless does NOT mean:</p>
+<blockquote>
+<p>No database exists.</p>
+</blockquote>
+<p>Databases are still used for:</p>
+<ul>
+<li>users</li>
+<li>quotas</li>
+<li>billing</li>
+<li>refresh tokens</li>
+<li>revoked tokens</li>
+</ul>
+<p>However:</p>
+<p>Authentication session state itself does not need to be stored.</p>
+<hr />
+<h1 id="request-example">Request Example</h1>
+<div class="highlight"><pre><span></span><code><span class="err">GET /profile</span>
+<span class="err">Authorization: Bearer JWT_TOKEN</span>
+</code></pre></div>
+<p>The backend verifies the token before processing the request.</p>
+<hr />
+<h1 id="common-http-authentication-status-codes">Common HTTP Authentication Status Codes</h1>
+<table>
+<thead>
+<tr>
+<th>Status Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="access-token-vs-refresh-token">Access Token vs Refresh Token</h1>
+<h2 id="access-token">Access Token</h2>
+<p>Short-lived token used for API requests.</p>
+<p>Example:</p>
+<ul>
+<li>15 minutes</li>
+<li>1 hour</li>
+</ul>
+<hr />
+<h2 id="refresh-token">Refresh Token</h2>
+<p>Used to generate new access tokens without logging in again.</p>
+<hr />
+<h1 id="why-this-matters-for-ai-systems">Why This Matters for AI Systems</h1>
+<p>Modern AI systems rely heavily on:</p>
+<ul>
+<li>APIs</li>
+<li>authentication</li>
+<li>permissions</li>
+<li>quotas</li>
+<li>scalable cloud infrastructure</li>
+</ul>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /chat</span>
+</code></pre></div>
+<p>The backend needs to determine:</p>
+<ul>
+<li>who the user is</li>
+<li>whether they are allowed to access the AI system</li>
+<li>quota limits</li>
+<li>enterprise permissions</li>
+</ul>
+<p>JWT is commonly used to solve this problem in production systems.</p>
+<hr />
+<h1 id="key-takeaways">Key Takeaways</h1>
+<ul>
+<li>HTTP is stateless</li>
+<li>Tokens help identify users</li>
+<li>JWT stores data inside the token payload</li>
+<li>JWT enables scalable authentication systems</li>
+<li>Authentication and authorization are different concepts</li>
+<li>Stateless authentication is important for cloud-native systems</li>
+<li>AI systems rely heavily on authentication and API security</li>
+</ul>
 
 
 
@@ -560,6 +861,8 @@
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
       
     
   </body>
