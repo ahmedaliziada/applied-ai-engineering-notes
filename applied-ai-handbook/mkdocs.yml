@@ -14,3 +14,6 @@ nav:
       - Databases: backend/databases.md
       - Business Logic: backend/business-logic.md
       - JWT: backend/jwt.md
+
+markdown_extensions:
+  - pymdownx.superfences

@@ -1,3 +1,6 @@
+<img src="./assets/images/AIlogo.png" alt="Logo" width="100" height="100" align="right" />
+
+
 # Applied AI Engineering Handbook
 
 This handbook documents my journey toward becoming a production-ready Applied AI Engineer.
