@@ -1,17 +1,47 @@
-# Welcome to MkDocs
+# Applied AI Engineering Handbook
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This handbook documents my journey toward becoming a production-ready Applied AI Engineer.
 
-## Commands
+Topics include:
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- Backend Engineering
+- AI Systems
+- RAG
+- Cloud Infrastructure
+- Docker
+- GCP
+- Software Architecture
+- AI Agents
+- Production Systems
 
-## Project layout
+---
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+## Current Learning Path
+
+### Layer 1 — Software Engineering Foundations
+
+- Python Engineering
+- Git & GitHub
+- Project Structure
+- Software Architecture
+
+### Layer 2 — Backend Engineering
+
+- HTTP
+- APIs
+- Authentication
+- Databases
+- Business Logic
+
+### Layer 3 — AI Engineering
+
+- LLMs
+- RAG
+- Vector Databases
+- Agents
+
+---
+
+## Goal
+
+Become a production-ready Applied AI Engineer with strong backend, cloud, and AI systems knowledge.
