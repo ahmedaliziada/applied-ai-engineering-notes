@@ -2,3 +2,15 @@ site_name: Applied AI Engineering Handbook
 
 theme:
   name: material
+
+nav:
+  - Home: index.md
+
+  - Backend Engineering:
+      - HTTP Basics: backend/http.md
+      - APIs: backend/apis.md
+      - Request Response Lifecycle: backend/request-response-lifecycle.md
+      - Authentication: backend/authentication.md
+      - Databases: backend/databases.md
+      - Business Logic: backend/business-logic.md
+      - JWT: backend/jwt.md
